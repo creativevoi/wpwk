@@ -1,0 +1,1 @@
+View file <strong><?php echo basename($tplPath)?>.php</strong> not found.

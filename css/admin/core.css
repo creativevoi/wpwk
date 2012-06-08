@@ -1,0 +1,8 @@
+#icon-will {background:url(../images/will-32.png) no-repeat;}
+table.cvlist {border:1px solid #666;}
+table.cvlist a {text-decoration:none;}
+table.cvlist a:hover {text-decoration:underline;}
+table.cvlist thead th {background:#666;color:#FFF;padding:7px 10px;}
+table.cvlist thead th.first {-moz-border-radius-top-left:5px;}
+table.cvlist tbody td {border-top:1px solid #FFF;border-bottom:1px solid #CCC;background:#F1F1F1;padding:7px 10px;}
+table.cvlist tbody .alt td {background:#F7F7F7;}
