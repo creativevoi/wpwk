@@ -9,7 +9,7 @@
     };
     _wk.loadForm = function() {
         $.post(_wk.ajaxurl,{
-            action: 'wk_load_form',
+            action: _wk.prefix + 'load_form',
             form: _wk.currentForm
         },function(rs){
             _wk.container.html(rs);

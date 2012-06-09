@@ -20,6 +20,7 @@ class WillKitAdmin extends WillKit
 							'ajaxurl' => admin_url('admin-ajax.php'),
 							'prefix' => $this->pluginPrefix . '_'
 						);
+		wp_localize_script('jquery', $this->jsObject, $jsObject);
 	}
 
 	function admin_head()
@@ -31,7 +32,7 @@ class WillKitAdmin extends WillKit
 
 	function admin_menu()
 	{
-        $hookSuffix = add_menu_page('Will Kit', 'Will Kit', 'manage_options', 'willkit', array(&$this, 'index'), $this->pluginURL . 'images/will.png');
+        $hookSuffix = add_menu_page('Will Kit', 'Will Kit', 'manage_options', $this->pluginPrefix . '_manage_will', array(&$this, 'index'), $this->pluginURL . 'images/will.png');
         add_action('admin_footer-'.$hookSuffix, array(&$this, 'index_footer'));
 	}
 

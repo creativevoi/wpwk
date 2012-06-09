@@ -7,7 +7,7 @@
     <p>Below is list of created wills.</p>
     
     <form method="get" action="<?php echo admin_url('admin.php');?>" id="filterform">
-        <input type="hidden" name="page" value="willkit" />
+        <input type="hidden" name="page" value="<?php echo $this->pluginPrefix;?>_manage_will" />
         <input type="hidden" name="p" value="<?php echo $pagination['current_page']?>" />
         <table>
             <tr>

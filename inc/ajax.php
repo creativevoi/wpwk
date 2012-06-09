@@ -1,10 +1,8 @@
 <?php
 
-class WillKitAjax extends CVCore 
+class WillKitAjax extends WillKit
 {
-    var $prefix = 'wk_';
-    
-    // 0 = nopriv, 1 = priv, other = both
+    // 0 = nopriv, 1 = priv, other = priv & nopriv
     var $actions = array(
                         'export_customer' => 1,
                         'load_form' => -1,
@@ -13,16 +11,18 @@ class WillKitAjax extends CVCore
     function __construct()
     {
         parent::__construct();
-        
+
+        $this->loadClass('helpers');
+
         foreach ( $this->actions as $action=>$actionOption )
         {
             if ($actionOption == 0) {
-                add_action("wp_ajax_nopriv_{$this->prefix}$action", array(&$this, $action));
+                add_action("wp_ajax_nopriv_{$this->pluginPrefix}_$action", array(&$this, $action));
             } elseif ($actionOption == 1) {
-                add_action("wp_ajax_{$this->prefix}$action", array(&$this, $action));
+                add_action("wp_ajax_{$this->pluginPrefix}_$action", array(&$this, $action));
             } else {
-                add_action("wp_ajax_{$this->prefix}$action", array(&$this, $action));
-                add_action("wp_ajax_nopriv_{$this->prefix}$action", array(&$this, $action));
+                add_action("wp_ajax_{$this->pluginPrefix}_$action", array(&$this, $action));
+                add_action("wp_ajax_nopriv_{$this->pluginPrefix}_$action", array(&$this, $action));
             }
         }
     }
@@ -73,9 +73,7 @@ class WillKitAjax extends CVCore
         if ( !in_array($form, $this->forms) ) {
         	$form = $this->forms[0];
         }
-        $this->loadview("forms/$form", $this->data);
-        exit();
+        $this->loadTpl("forms/$form");
+        exit;
     }
 }
-
-$WillKitAjax = new WillKitAjax();

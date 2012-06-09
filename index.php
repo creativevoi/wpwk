@@ -12,10 +12,20 @@ class WillKit
     var $table_will = 'willdata';
     var $pluginPrefix = 'wpwk';
     var $version = '2.0';
+    var $shortcode = 'WPWK';
+    var $jsObject = '_wk';
+    var $forms = array(
+                        'personal_details',
+                        'executors',
+                    );
 
     var $pluginPath = '';
     var $pluginURL = '';
     var $incPath = '';
+    var $adminClass = false;
+    var $mainClass = false;
+    var $ajaxClass = false;
+    var $helpers = false;
     var $data = array();
 
     function __construct()
@@ -29,14 +39,23 @@ class WillKit
 
     function init()
     {
-        if (is_admin()) {
+        if (is_admin() AND file_exists($this->incPath . 'admin.php')) {
+            // load admin class
             require_once($this->incPath . 'admin.php');
             $className = __CLASS__ . 'Admin';
-            $$className = new $className();
-        } else {
+            $this->adminClass = new $className();
+        } elseif (file_exists($this->incPath . 'main.php')) {
+            // load main class
             require_once($this->incPath . 'main.php');
             $className = __CLASS__ . 'Main';
-            $$className = new $className();
+            $this->mainClass = new $className();
+        }
+
+        if (file_exists($this->incPath . 'ajax.php')) {
+            // load ajax class
+            require_once($this->incPath . 'ajax.php');
+            $className = __CLASS__ . 'Ajax';
+            $this->ajaxClass = new $className();
         }
 
         register_activation_hook(__FILE__, array(&$this, 'on_activation'));
@@ -64,6 +83,15 @@ class WillKit
     }
 
 /********** UTILITY FUNCTIONS **********/
+
+    function loadClass($name='')
+    {
+        if (file_exists($this->incPath . $name . '.php')) {
+            require_once($this->incPath . $name . '.php');
+            $className = __CLASS__ . ucfirst($name);
+            $this->$name = new $className();
+        }
+    }
 
     function loadModel($name='', $shortname='')
     {
