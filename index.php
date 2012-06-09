@@ -9,12 +9,14 @@ Version: 1.0
 
 class WillKit
 {
-    var $table_willdata = 'willdata';
+    var $table_will = 'willdata';
+    var $pluginPrefix = 'wpwk';
+    var $version = '2.0';
 
     var $pluginPath = '';
     var $pluginURL = '';
     var $incPath = '';
-    var $version = '2.0';
+    var $data = array();
 
     function __construct()
     {
@@ -29,9 +31,12 @@ class WillKit
     {
         if (is_admin()) {
             require_once($this->incPath . 'admin.php');
-            
+            $className = __CLASS__ . 'Admin';
+            $$className = new $className();
         } else {
-
+            require_once($this->incPath . 'main.php');
+            $className = __CLASS__ . 'Main';
+            $$className = new $className();
         }
 
         register_activation_hook(__FILE__, array(&$this, 'on_activation'));
@@ -40,10 +45,11 @@ class WillKit
 
     function on_activation()
     {
+        global $wpdb;
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-        $table = $this->db->prefix . $this->table_willdata;
-        if($this->db->get_var("SHOW TABLES LIKE '$table'") != $table) {
+        $table = $wpdb->prefix . $this->table_willdata;
+        if($wpdb->get_var("SHOW TABLES LIKE '$table'") != $table) {
             $sql = "CREATE TABLE /*!32312 IF NOT EXISTS*/ `$table` (
                       `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                       PRIMARY KEY (`id`)
@@ -68,12 +74,11 @@ class WillKit
             if ( property_exists($this, "table_$name") ) {
                 $tableName = $this->{"table_$name"};
             } else {
-                wp_die("Property <strong>table_$name</strong> does not exist.");
+                wp_die("Property <strong>table_$name</strong> does not exist in core class.");
             }
-            require_once($this->incPath . 'model.php');
             require_once($modelPath);
             
-            $className = "model_$name";
+            $className = __CLASS__ . "Model_$name";
             
             if ( !empty($shortname) ) {
                 $this->{$shortname} = new $className($tableName);
@@ -241,7 +246,7 @@ $WillKit->init();
 // require_once(WILLKIT_PLUGIN_PATH.'ajax.php');
 // require_once(WILLKIT_PLUGIN_PATH.'admin.php');
 
-class WillKit1 extends CVCore 
+class WillKit1 
 {
     var $loadJsCss = false;
     
